@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ .Title }}</title>
+</head>
+<body>
+  <h1>{{ .Title }}</h1>
+  {{ if .Error }}
+  <p>Could not reach the backend at {{ .Backend }}: {{ .Error }}</p>
+  {{ else }}
+  <p>{{ .Message }}</p>
+  <p>Served by the frontend, message fetched from the backend at {{ .Backend }}.</p>
+  {{ end }}
+</body>
+</html>
