@@ -1,0 +1,27 @@
+services:
+  test-app-backend:
+    build: ./backend
+    environment:
+      PORT: "8080"
+    user: "1001:1001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  test-app-frontend:
+    build: ./frontend
+    environment:
+      PORT: "8080"
+      BACKEND_URL: "http://test-app-backend:8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - test-app-backend
+    user: "1001:1001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
