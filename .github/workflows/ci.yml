@@ -65,26 +65,22 @@ jobs:
         run: go test -race ./...
 
   vulncheck:
+    # Single job (no matrix) so govulncheck is installed once, not once per service.
     runs-on: ubuntu-latest
     permissions:
       contents: read
     env:
       GOVULNCHECK_VERSION: v1.1.4
-    strategy:
-      fail-fast: false
-      matrix:
-        service: [backend, frontend]
-    defaults:
-      run:
-        working-directory: ${{ matrix.service }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
         with:
-          go-version-file: ${{ matrix.service }}/go.mod
-          cache-dependency-path: ${{ matrix.service }}/go.mod
+          go-version-file: backend/go.mod
+          cache-dependency-path: |
+            backend/go.mod
+            frontend/go.mod
       # Cache the compiled govulncheck binary so it is not rebuilt every run.
       - name: Cache govulncheck
         id: cache-govulncheck
@@ -97,7 +93,11 @@ jobs:
         run: go install golang.org/x/vuln/cmd/govulncheck@${{ env.GOVULNCHECK_VERSION }}
       - name: Run govulncheck
         run: |
-          "$(go env GOPATH)/bin/govulncheck" ./...
+          bin="$(go env GOPATH)/bin/govulncheck"
+          for svc in backend frontend; do
+            echo "== govulncheck $svc =="
+            (cd "$svc" && "$bin" ./...)
+          done
 
   dependency-review:
     # PR-only: diffs dependency manifests against the GitHub advisory database.
