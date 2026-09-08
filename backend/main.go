@@ -15,7 +15,7 @@ type Message struct {
 
 var payload = Message{
 	Title:   "Hello World",
-	Message: "Welcome to the container platform",
+	Message: "Welcome to the container platform (v2)",
 }
 
 func main() {
