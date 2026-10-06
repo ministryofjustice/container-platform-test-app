@@ -12,5 +12,23 @@
   <p>{{ .Message }}</p>
   <p>Served by the frontend, message fetched from the backend at {{ .Backend }}.</p>
   {{ end }}
+
+  {{ if .Database }}
+  <h2>Add a value</h2>
+  <form method="post" action="/add">
+    <label for="add-name">Value</label>
+    <input id="add-name" name="name" type="text" maxlength="100" required>
+    <button type="submit">Submit</button>
+  </form>
+  {{ if .Notice }}<p>{{ .Notice }}</p>{{ end }}
+
+  <h2>Search for a value</h2>
+  <form method="get" action="/search">
+    <label for="search-name">Value</label>
+    <input id="search-name" name="name" type="text" maxlength="100" required value="{{ .Term }}">
+    <button type="submit">Search</button>
+  </form>
+  {{ if .Result }}<p>{{ .Result }}</p>{{ end }}
+  {{ end }}
 </body>
 </html>
