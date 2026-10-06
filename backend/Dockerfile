@@ -2,7 +2,7 @@ FROM golang:1.26@sha256:91eda9776261207ea25fd06b5b7fed8d397dd2c0a283e77f2ab6e91b
 
 WORKDIR /app
 
-COPY go.mod ./
+COPY go.mod go.sum ./
 RUN go mod download
 
 COPY *.go ./
